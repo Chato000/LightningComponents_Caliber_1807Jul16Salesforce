@@ -1,0 +1,43 @@
+<aura:component>
+	<aura:attribute name="assessmentId" type="String" />
+	<aura:attribute name="assessment" type="Object" />
+	<aura:attribute name="tabOrder" type="String" />
+	<aura:attribute name="hintTraineeName" type="String" />
+	<aura:registerEvent name="gradeChange" type="c:FaceChangedEvent" />
+
+	<aura:handler name="onchange" event="c:RecordChange"
+		action="{!c.onChange}" />
+
+	<force:recordData aura:id="recordData" recordId="{!v.assessmentId}"
+		fields="['Id', 'Grade__c', 'Subject__r.Type__c', 'Subject__r.Id', 'Notes__c', 'Integer_Smilie__c']"
+		mode="EDIT" targetFields="{!v.assessment}"
+		recordUpdated="{!c.onChangeGrade}" />
+
+	<aura:if isTrue="{!v.assessment.Subject__r.Type__c == 'Notes'}">
+		<td style="padding: 10px"><lightning:textarea
+				value="{!v.assessment.Notes__c}" type="text"
+				onchange="{!c.onChange}" label=" " variant="label-hidden"
+				placeholder="{! 'Notes for ' + v.hintTraineeName}"
+				tabindex="{!v.tabOrder + '1'}" /></td>
+		<aura:set attribute="else">
+			<aura:if isTrue="{!v.assessment.Subject__r.Type__c == 'QC'}">
+				<td width="75"><c:Smile subAssessment="{!v.assessment}" /></td>
+				<div style="padding: 10px">
+					<lightning:textarea value="{!v.assessment.Notes__c}" type="text"
+						onchange="{!c.onChange}" label=" " variant="label-hidden"
+						placeholder="{! 'Notes for ' + v.hintTraineeName}"
+						tabindex="{!v.tabOrder + '1'}" />
+				</div>
+				<aura:set attribute="else">
+					<td width="100">
+						<div class="field">
+							<lightning:input value="{!v.assessment.Grade__c}" type="number"
+								onchange="{!c.onChange}" label=" " variant="label-hidden"
+								tabindex="{!v.tabOrder + '1'}" step="0.01" />
+						</div>
+					</td>
+				</aura:set>
+			</aura:if>
+		</aura:set>
+	</aura:if>
+</aura:component>

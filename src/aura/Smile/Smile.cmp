@@ -1,0 +1,17 @@
+<aura:component >
+    <!-- doInit speaks to the controller to populate values from the Salesforce database -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <!-- subAssessment will be assigned in the parent component and the url will
+		 be changed based on the values from the database-->
+    <aura:attribute name="subAssessment" type="Assessment__c"/>
+    <aura:attribute name="url" type="String"/>
+	
+    <!-- Event triggers that are fired when a smiley image changes-->
+    <aura:registerEvent name="onchange" type="c:RecordChange" />
+	<aura:registerEvent name="faceChange" type="c:FaceChangedEvent" />
+    
+    <!-- This image is the smiley face shown in QC page and the url is set to a
+	  	 static resource stored in a zip file-->
+    <img width="32" height="32" src="{!v.url}" onclick="{!c.changeFace}"/>
+</aura:component>

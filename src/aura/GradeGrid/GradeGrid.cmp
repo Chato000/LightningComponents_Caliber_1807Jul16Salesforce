@@ -1,0 +1,125 @@
+<aura:component controller="GradeGridController">
+	<aura:attribute name="weekId" type="String" required="true" />
+	<aura:attribute name="forQC" type="Boolean" default="false" />
+
+	<aura:attribute name="faceAverage" type="Decimal" />
+	<aura:attribute name="faceMap" type="Map" default="{}" />
+	<aura:attribute name="gradeAverage" type="Decimal" />
+	<aura:attribute name="gradeMap" type="Map" default="{}" />
+
+	<aura:attribute name="subjects" type="Subject__c[]" />
+	<aura:attribute name="trainees" type="String[]" />
+	<aura:attribute name="subjectWeights" type="Map" default="{}" />
+	<aura:attribute name="totalWeight" type="Integer" />
+	<aura:attribute name="qcSubjectList" type="String" />
+
+	<aura:attribute name="currentModal" type="Object" />
+
+	<aura:attribute name="week" type="Object" />
+	<force:recordData aura:id="recordData" recordId="{!v.weekId}"
+		fields="['QC_Notes__c', 'Notes__c', 'Category__c', 'Integer_Smilie__c']"
+		mode="EDIT" targetFields="{!v.week}" />
+
+	<!-- Start of handlers for child component change events -->
+	<aura:handler name="faceChange" event="c:FaceChangedEvent"
+		action="{!c.averageFaces}" includeFacets="true" />
+	<aura:handler name="gradeChange" event="c:FaceChangedEvent"
+		action="{!c.averageGrades}" includeFacets="true" />
+	<aura:handler name="faceOverride" event="c:FaceChangedEvent"
+		action="{!c.onChange}" includeFacets="true" />
+	<!-- End of handlers for child component change events -->
+
+	<!-- Start of Creates Modal that creates a new assessment-->
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<aura:handler name="closeModal" event="c:PleaseCloseModalEvent"
+		action="{!c.closeModal}" includeFacets="true" />
+	<!-- End of Creates Modal that creates a new assessment-->
+
+	<!-- Start of Button to Create Assessment (for QC page only)-->
+	<lightning:overlayLibrary aura:id="overlayLib" />
+	<aura:if isTrue="{!v.forQC}">
+		Categories covered this week: <ui:outputText
+			value="{!v.qcSubjectList}" />
+		<p class="line"></p>
+	</aura:if>
+	<table class="slds-table
+							slds-table_cell-buffer slds-table_bordered">
+		<tr>
+			<th>Trainee</th>
+
+			<td width="50"><aura:if isTrue="{!v.forQC}">
+					<aura:set attribute="else">
+						<lightning:buttonicon iconName="utility:record_create"
+							variant="bare" size="large" onclick="{!c.addSubject}"
+							title="Add Assessment" />
+					</aura:set>
+				</aura:if></td>
+			<!-- End of Button to Create Assessment-->
+
+
+			<!--Start of Creates Assessment title for Assessment-->
+			<aura:iteration items="{!v.subjects}" var="subject">
+				<th>
+
+					<p>
+						<aura:if isTrue="{!subject.Category__c != subject.Type__c}">
+							<strong><ui:outputText value="{!subject.Category__c}" /></strong>
+						</aura:if>
+					</p>
+					<p>
+						<strong><ui:outputText value="{!subject.Type__c}" /></strong>
+					</p>
+					<p>
+						<aura:if isTrue="{!subject.Type__c != 'QC'}">
+							<aura:if isTrue="{!subject.Type__c != 'Notes'}">
+								<lightning:buttonIcon iconName="utility:settings" variant="bare"
+									onclick="{!c.modSubject}" value="{!subject.Id}" />
+								<strong><lightning:formattedNumber style="percent"
+										value="{!subject.Weight__c / v.totalWeight}" /></strong>
+							</aura:if>
+						</aura:if>
+					</p>
+				</th>
+			</aura:iteration>
+		</tr>
+
+		<!--End of Creates Assessment title for Assessment-->
+
+		<!-- Starts display of Trainees in the Batch-->
+
+		<aura:iteration items="{!v.trainees}" var="traineeId">
+			<tr
+				style="border-top: 1px solid black; border-bottom: 1px solid black">
+				<c:GradeRow traineeId="{!traineeId}" subjects="{!v.subjects}"
+					weekId="{!v.weekId}" tabOrder="{!_index}" />
+			</tr>
+		</aura:iteration>
+		<tr>
+			<td><strong>Average</strong></td>
+			<td></td>
+			<aura:iteration items="{!v.subjects}" var="subject">
+				<td><aura:if isTrue="{!!v.forQC}">
+						<aura:if isTrue="{! v.subjects.length - 1 == _index}">
+							<ui:outputText value="Overall: " />
+						</aura:if>
+					</aura:if> <lightning:formattednumber style="percent" aura:id="::AVG" /></td>
+			</aura:iteration>
+		</tr>
+		<br></br>
+	</table>
+	<!-- Ends display of Trainees in the Batch-->
+
+	<!-- Start of selection of specific Notes-->
+	<aura:if isTrue="{!v.forQC}">
+		<c:AverageSmile week="{!v.week}" average="{!v.faceAverage}" />
+		<lightning:textarea value="{!v.week.QC_Notes__c}" label="Notes"
+			tabindex="20000000" onchange="{!c.onChange}" />
+		<hr></hr>
+		<aura:set attribute="else">
+			<lightning:textarea value="{!v.week.Notes__c}" label="Notes"
+				tabindex="20000000" onchange="{!c.onChange}" />
+			<hr></hr>
+		</aura:set>
+	</aura:if>
+	<!-- End of selection of specific Notes-->
+</aura:component>

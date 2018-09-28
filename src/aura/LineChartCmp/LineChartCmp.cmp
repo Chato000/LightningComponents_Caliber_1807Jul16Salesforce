@@ -1,0 +1,6 @@
+<aura:component >
+    <ltng:require scripts="{!$Resource.ChartJS}" afterScriptsLoaded="{!c.generateChart}"/>
+	 <div class="slds-box">
+		<canvas aura:id="linechart" height="300" width="450"></canvas>
+    </div>
+</aura:component>

@@ -1,0 +1,6 @@
+<aura:component
+	implements="flexipage:availableForRecordHome,force:hasRecordId">
+	<aura:if isTrue="{!v.recordId}">
+		<c:GradeGrid weekId="{!v.recordId}" forQC="true" />
+	</aura:if>
+</aura:component>

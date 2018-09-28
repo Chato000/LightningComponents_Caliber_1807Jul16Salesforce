@@ -1,0 +1,27 @@
+<aura:component controller="GradeRowController">
+	<aura:attribute name="traineeId" type="String" required="true" />
+	<aura:attribute name="subjects" type="Subject__c[]" required="true" />
+	<aura:attribute name="assessments" type="String[]" />
+	<aura:attribute name="trainee" type="Object" />
+	<aura:attribute name="tabOrder" type="String" />
+	<aura:attribute name="weekId" type="String" required="true" />
+
+	<!-- Start of the handlers -->
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+	<!-- End of the handlers -->
+
+	<!-- Start of Lightning Data Service (LDS) binding -->
+	<force:recordData aura:id="recordData" recordId="{!v.traineeId}"
+		fields="['Name']" mode="VIEW" targetFields="{!v.trainee}" />
+	<!-- End of (LDS) binding -->
+
+	<!-- Start of Trainee name and assessment score display -->
+	<td width="125"><ui:outputText value="{!v.trainee.Name}" /></td>
+	<td></td>
+	<aura:iteration items="{!v.assessments}" var="assessment">
+		<c:GradeBox hintTraineeName="{!v.trainee.Name}"
+			assessmentId="{!assessment}"
+			tabOrder="{! _index + '0000' + v.tabOrder}" />
+	</aura:iteration>
+	<!-- End of Trainee name and assessment score display -->
+</aura:component>

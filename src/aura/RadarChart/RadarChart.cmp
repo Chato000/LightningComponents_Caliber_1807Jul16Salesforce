@@ -1,0 +1,15 @@
+<aura:component controller="radarAndDonutChart" implements="flexipage:availableForAllPageTypes,force:appHostable">
+    <ltng:require scripts="{!$Resource.ChartJS}" afterScriptsLoaded="{!c.init}"/>
+    <div class="heading">
+            Radar Chart
+    </div>
+    
+    <lightning:card>
+        <div>  
+            <canvas aura:id="radarChart" id="radarCHart123"/>
+        </div>    
+    </lightning:card>
+
+    
+    <p>Ending of Radar Compoennt</p>
+</aura:component>

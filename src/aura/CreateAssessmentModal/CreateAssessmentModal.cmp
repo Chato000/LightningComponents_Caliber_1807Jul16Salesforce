@@ -1,0 +1,14 @@
+<aura:component>
+	<aura:attribute name="subjectId" type="String" />
+	<aura:attribute name="weekId" type="String" required="true" />
+	<aura:attribute name="modal" type="Object" />
+
+	<lightning:recordEditForm onsuccess="{!c.onSubmit}" objectApiName="Subject__c" recordId="{!v.subjectId}">
+		<lightning:messages />
+		<lightning:inputField fieldName="Category__c" />
+		<lightning:inputField fieldName="Type__c" />
+		<lightning:inputField fieldName="Weight__c" />
+		<lightning:inputField fieldName="Week__c" value="{!v.weekId}" style="display: none" />
+		<lightning:button type="submit" label="Save" />
+	</lightning:recordEditForm>
+</aura:component>

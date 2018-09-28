@@ -1,0 +1,9 @@
+.THIS {
+    margin: 0;
+}
+
+.THIS.box{
+    margin-left: auto;
+	margin-right: auto;
+	display: block;
+}

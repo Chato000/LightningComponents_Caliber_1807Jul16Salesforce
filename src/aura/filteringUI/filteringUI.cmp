@@ -1,0 +1,181 @@
+<aura:component controller="filteringData" implements="flexipage:availableForAllPageTypes,forceCommunity:availableForAllPageTypes,force:appHostable">
+	<ltng:require scripts="{!$Resource.ChartJS}"/>
+    <ltng:require scripts="{!$Resource.chartjsannotation}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+   	<aura:attribute name="years" type="String[]" />
+    <aura:attribute name="quarters" type="String[]" />
+    <aura:attribute name="batches" type="Object[]" />
+    <aura:attribute name="associates" type="String[]" />
+    <aura:attribute name="weeks" type="String[]" />
+    <aura:attribute name="barChartVals" type="Integer[]" />
+    <aura:attribute name="barChartNames" type="String[]" />
+    <aura:attribute name="radarChartVals" type="Integer[]" />
+    <aura:attribute name="radarChartNames" type="String[]" />
+    <aura:attribute name="lineChartVals" type="Integer[]" />
+    <aura:attribute name="lineChartNames" type="String[]" />
+    <aura:attribute name="tableHeaders" type="String[]" />
+    <aura:attribute name="traineeNames" type="String[]" />
+    <aura:attribute name="traineeValues" type="Object" />
+    
+    <aura:attribute name="thisYear" type="String" /> <!-- assign a year value in this attr from JS to select that year by default in yearSelection -->
+    <aura:attribute name="thisQuarter" type="String" /> <!-- assign a Quarter value ('Q2') in this attr from JS to select that year by default in quarterSelection -->
+    
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col"> 
+            <p class="title">Year</p>
+            <ui:inputSelect class="single" aura:id="yearSelection" change="{!c.getBatches}" > 
+                <aura:iteration items="{!v.years}" var="year">
+                	<ui:inputSelectOption text="{!year}" value="{!year==v.thisYear}"/>
+                </aura:iteration>
+            </ui:inputSelect>
+        </div>  
+        
+        <div class="slds-col"> 
+            <p class="title">Quarter</p>
+            <ui:inputSelect class="single" aura:id="quarterSelection" change="{!c.getBatches}" >
+                <aura:iteration items="{!v.quarters}" var="q">
+                    <ui:inputSelectOption text="{!q}" value="{!q==v.thisQuarter}"/>
+                </aura:iteration>
+            </ui:inputSelect>
+        </div> 
+        
+        <div class="slds-col"> 
+            <p class="title">Batches</p>
+            <ui:inputSelect class="single" aura:id="batchSelection" change="{!c.getAssociates}">
+                <aura:iteration items="{!v.batches}" var="batch">
+                    <ui:inputSelectOption text="{!batch}"/>
+                </aura:iteration>
+            </ui:inputSelect>
+        </div>  
+        
+        <div class="slds-col"> 
+            <p class="title">Week</p>
+            <ui:inputSelect class="single" aura:id="weekSelection" change="{!c.weekHandler}">
+                <aura:iteration items="{!v.weeks}" var="week">
+                    <ui:inputSelectOption text="{!week}"/>
+                </aura:iteration>
+            </ui:inputSelect>
+        </div> 
+        
+        <div class="slds-col"> 
+            <p class="title">Associate</p>
+            <ui:inputSelect class="single" aura:id="associateSelection" change="{!c.associateHandler}">
+                <aura:iteration items="{!v.associates}" var="associate">
+                    <ui:inputSelectOption text="{!associate}"/>
+                </aura:iteration>
+            </ui:inputSelect>
+        </div>  
+        
+         
+    </div>
+    
+    <div class="slds-grid slds-gutters" aura:id="chartArea">
+        <div class="slds-col">
+            <div>
+                <canvas aura:id="bigBarChart"></canvas>
+                <table class="chart-table">
+                    <thead>
+                        <tr>
+                            <aura:iteration items="{!v.barChartNames}" var="name">
+                                <th>{!name}</th>
+                            </aura:iteration>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <aura:iteration items="{!v.barChartVals}" var="val">
+                                <td>{!val}</td>
+                            </aura:iteration>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col">
+            <div>
+                <canvas aura:id="radarDountChart"></canvas>
+                <br />
+                <table class="chart-table">
+                    <thead>
+                        <tr>
+                            <aura:iteration items="{!v.radarChartNames}" var="name">
+                                <th>{!name}</th>
+                            </aura:iteration>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <aura:iteration items="{!v.radarChartVals}" var="val">
+                                <td>{!val}</td>
+                            </aura:iteration>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+	</div>
+    
+    <!--<div class="slds-grid slds-gutters">
+        <div class="slds-col">
+            <div>
+                <canvas aura:id="lineBarChart"></canvas>
+                <table aura:id="lineBarTable">
+                    <thead>
+                        <tr>
+                            <aura:iteration items="{!v.lineChartNames}" var="name">
+                                <th>{!name}</th>
+                            </aura:iteration>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <aura:iteration items="{!v.lineChartVals}" var="val">
+                                <td>{!val}</td>
+                            </aura:iteration>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>-->
+    <div class="slds-grid slds-gutters">
+        <br />
+    	<br />
+        <div class="slds-col">
+            <div>
+                <table aura:id="qcTable" class="chart-table">
+                    <thead>
+                    	<tr>
+                            <aura:iteration items="{!v.tableHeaders}" var="t">
+                        		<th>{!t}</th>
+                           	</aura:iteration>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- this is hard coded. I'm sorry -->
+                    	<aura:iteration items="{!v.traineeValues}" var="tv" indexVar="i">
+                        	<tr>
+                            	<td class="trainee-names">{!tv[0]}</td>
+                                <td><img src="{!tv[1]}" /></td>
+                                <td><img src="{!tv[2]}" /></td>
+                                <td><img src="{!tv[3]}" /></td>
+                                <td><img src="{!tv[4]}" /></td>
+                                <td><img src="{!tv[5]}" /></td>
+                                <td><img src="{!tv[6]}" /></td>
+                                <td><img src="{!tv[7]}" /></td>
+                                <td><img src="{!tv[8]}" /></td>
+                                <td><img src="{!tv[9]}" /></td>
+                                <td><img src="{!tv[10]}" /></td>
+                            </tr>
+                        </aura:iteration>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!--<lightning:button variant="brand" label="Click once" title="Debug Button" onclick="{! c.debugButton }" />-->
+</aura:component>

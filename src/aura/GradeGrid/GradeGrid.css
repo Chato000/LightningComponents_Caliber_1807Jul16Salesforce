@@ -1,0 +1,27 @@
+.THIS.line {
+    border-bottom: 1px solid #ccc; /* This is the line replacing the hr*/
+    margin-bottom: 10px; /* This is the space below the line */
+    padding-bottom: 0px; /* This is the space between the heading text and the line */
+    width : 100%;
+}
+
+.THIS a {
+	text-decoration: none;
+	text-color: black;
+}
+
+.THIS lightning-icon.custom_fill_success > lightning-primitive-icon > svg > use{
+    fill: green;
+}
+.THIS lightning-icon.custom_fill_super > lightning-primitive-icon > svg > use{
+    fill: blue;
+}
+.THIS .custom_height_5 > use{
+  height: 5rem;
+}
+.THIS textarea {
+  height: 5rem;
+}
+.THIS table {
+  border: 1px solid rgb(217, 219, 221);
+}

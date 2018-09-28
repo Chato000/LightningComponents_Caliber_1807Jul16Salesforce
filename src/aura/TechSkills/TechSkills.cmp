@@ -1,0 +1,8 @@
+<aura:component >
+    Here is the Radar/Donut chart representing skills in different areas/QC results
+    <ltng:require scripts="{!$Resources.ChartJS}" afterScriptsLoaded="{!}" />
+    
+    <div>
+    
+    </div>
+</aura:component>

@@ -1,0 +1,25 @@
+<aura:component >
+    <aura:attribute name="week" type="Object" required="true" />
+	<aura:attribute name="average" type="Decimal" required="true" />
+
+	<aura:attribute name="happyUrl" type="String" access="private" />
+	<aura:attribute name="neutralUrl" type="String" access="private" />
+	<aura:attribute name="sadUrl" type="String" access="private" />
+
+	<aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+	<aura:handler name="change" value="{!v.average}" action="{!c.onChange}" />
+
+	<aura:registerEvent name="faceOverride" type="c:FaceChangedEvent" />
+    
+<div class="slds-grid slds-gutters">
+  <div class="slds-col slds-grid slds-grid_align-center">
+    <img width="32" height="32"  src="{!v.happyUrl}" onclick="{!c.overrideHappy}" />
+    </div>
+      <div class="slds-col slds-grid slds-grid_align-center">
+    <img width="32" height="32" src="{!v.neutralUrl}" onclick="{!c.overrideNeutral}" />
+    </div>
+  	<div class="slds-col slds-grid slds-grid_align-center">    
+    <img width="32" height="32"  src="{!v.sadUrl}" onclick="{!c.overrideSad}" />
+      </div>
+    </div>
+</aura:component>

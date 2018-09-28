@@ -1,0 +1,3 @@
+<aura:component implements="force:hasRecordId,forceCommunity:availableForAllPageTypes,flexipage:availableForRecordHome,force:lightningQuickAction" access="global">
+	<c:TrainingTabs recordId="{!v.recordId}" forQC="true" />
+</aura:component>
